@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos PET</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div class="logo">Pedidos PET</div>
+    <nav>
+      <a href="#como-funciona">Como Funciona</a>
+      <a href="#participar">Participe</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <!-- Banner Hero -->
+  <section class="hero">
+    <img src="image/banner.png" alt="Pets esperando ajuda">
+    <div class="content">
+      <h1>Nos ajude a alimentar e curar os animais de rua</h1>
+      <h2 style="color: #FF6600;">
+        E ainda economize nas compras da ração de seu PET...
+      </h2>
+      <h2 style="color: #FF6600;">
+        ...sem perder seu precioso tempo ligando para vários fornecedores.
+      </h2>
+      <h2>Nós fazemos isso para você. Veja como:</h2>
+      <br>
+      <img src="image/storyboard.png" alt="Como ajudar?" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
+      <br>
+      <h2 style="color: #FF6600;">
+        Adicione nosso <img src="image/logo_whatsapp.png" alt="WhatsApp" style="display: inline; height: 1.2em; vertical-align: middle; margin: 0 0.2em;"> WhatsApp e faça seus pedidos de orçamento.
+      </h2><br>
+      <div class="actions">
+        <a href="https://wa.me/555391017441?text=Ol%C3%A1!%20Gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20Pedidos%20PET." target="_blank" rel="noopener noreferrer" class="btn btn-primary">Solicite orçamentos de RAÇÃO</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Como Funciona -->
+  <section id="como-funciona">
+    <h2 style="text-align:center; margin-bottom:2rem;">Faça parte do Projeto</h2>
+    <div class="features">
+      <div class="feature">
+        <img src="image/furgao_small.png" alt="Fornecedor">
+        <h3>Seja um Fornecedor</h3>
+        <p>Receba pedidos diretamente no seu WhatsApp.</p>
+        <button class="btn btn-secondary" onclick="openModal()">Cadastrar como Fornecedor</button>
+      </div>
+      <div class="feature">
+        <img src="image/coordenador_small.png" alt="Coordenador Regional">
+        <h3>Seja um Coordenador</h3>
+        <p>Coleta e redistribuição de contrapartidas em sua região.</p>
+        <button class="btn btn-secondary" onclick="openCoordenadorModal()">Cadastrar como Coordenador</button>
+      </div>
+      <div class="feature">
+        <img src="image/Doar_small.png" alt="Doações e Voluntários">
+        <h3>Doe tempo ou recursos</h3>
+        <p>Ajude como voluntário ou doando qualquer quantia.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta" id="participar">
+    <h2>Pronto para Ajudar?</h2>
+    <p>Participe distribuindo, doando ou divulgando nossa causa. Cada pequena ação faz grande diferença!</p>
+    <a href="https://wa.me/555391017441?text=Ol%C3%A1!%20Quero%20participar%20do%20Pedidos%20PET." target="_blank" class="btn btn-light">Quero Ajudar Agora</a>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contato">
+    <p>&copy; 2025 Pedidos PET. Todos os direitos reservados.</p>
+    <p>Contato: <a href="mailto:contato@pedidospet.com.br" style="color: inherit;">contato@pedidospet.com.br</a> | <a href="tel:+5533913912524" style="color: inherit;">(53) 99139-2524</a></p>
+  </footer>
+
+  <!-- Modal Formulário Fornecedor -->
+  <div id="fornecedorModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Cadastro de Fornecedor</h2>
+      <form id="fornecedorForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label for="nomeComercial">Nome Comercial:</label>
+          <input type="text" id="nomeComercial" name="nomeComercial" required>
+        </div>
+        <div class="form-group">
+          <label for="nomeContato">Nome de Contato:</label>
+          <input type="text" id="nomeContato" name="nomeContato" required>
+        </div>
+        <div class="form-group">
+          <label for="cidade">Cidade:</label>
+          <input type="text" id="cidade" name="cidade" required>
+        </div>
+        <div class="form-group">
+          <label for="estado">Estado:</label>
+          <select id="estado" name="estado" required>
+            <option value="">Selecione o Estado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="celular">Celular (WhatsApp):</label>
+          <input type="tel" id="celular" name="celular" placeholder="(00) 00000-0000" required>
+        </div>
+        <button type="submit" class="btn btn-secondary">Enviar Cadastro</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Formulário Coordenador Regional -->
+  <div id="coordenadorModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeCoordenadorModal()">&times;</span>
+      <h2>Cadastro de Coordenador Regional</h2>
+      <form id="coordenadorForm" onsubmit="submitCoordenadorForm(event)">
+        <div class="form-group">
+          <label for="nomeCoordenador">Nome:</label>
+          <input type="text" id="nomeCoordenador" name="nomeContato" required>
+        </div>
+        <div class="form-group">
+          <label for="cidadeCoordenador">Cidade:</label>
+          <input type="text" id="cidadeCoordenador" name="cidade" required>
+        </div>
+        <div class="form-group">
+          <label for="estadoCoordenador">Estado:</label>
+          <select id="estadoCoordenador" name="estado" required>
+            <option value="">Selecione o Estado</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="celularCoordenador">Celular (WhatsApp):</label>
+          <input type="tel" id="celularCoordenador" name="celular" placeholder="(00) 00000-0000" required>
+        </div>
+        <button type="submit" class="btn btn-secondary">Enviar Cadastro</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
