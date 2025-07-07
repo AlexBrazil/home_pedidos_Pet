@@ -138,7 +138,7 @@ async function submitForm(event) {
     submitButton.disabled = true;
     
     // Enviar dados para o webhook n8n
-    const response = await fetch('https://automatiz-n8n-webhook.dp51xv.easypanel.host/webhook/96b9a832-a8c2-4bf5-b5ff-62cd3b7c736a', {
+    const response = await fetch('https://automatiz-n8n-webhook.dp51xv.easypanel.host/webhook/a5af5896-4ac6-43ce-b1e2-7ffa8a43b55b', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ async function submitCoordenadorForm(event) {
     submitButton.disabled = true;
     
     // Enviar dados para o webhook n8n
-    const response = await fetch('https://automatiz-n8n-webhook.dp51xv.easypanel.host/webhook/96b9a832-a8c2-4bf5-b5ff-62cd3b7c736a', {
+    const response = await fetch('https://automatiz-n8n-webhook.dp51xv.easypanel.host/webhook/a5af5896-4ac6-43ce-b1e2-7ffa8a43b55b', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
