@@ -69,6 +69,13 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Trocar imagens baseado no tamanho da tela
   trocarImagensResponsivas();
+  
+  // INÍCIO DA INSERÇÃO: Chamar a inicialização do carrossel
+  // Inicializa o carrossel apenas se o elemento existir na página
+  if (document.querySelector('.carousel-container')) {
+    initCarousel();
+  }
+  // FIM DA INSERÇÃO
 });
 
 // Escutar mudanças no tamanho da tela
@@ -111,11 +118,9 @@ async function submitForm(event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData);
   
-  // Obter referência do botão e texto original antes do try
   const submitButton = event.target.querySelector('button[type="submit"]');
   const originalText = submitButton.textContent;
   
-  // Preparar dados para o webhook
   const webhookData = {
     body: {
       data: {
@@ -133,31 +138,20 @@ async function submitForm(event) {
   };
   
   try {
-    // Mostrar indicador de carregamento
     submitButton.textContent = 'Enviando...';
     submitButton.disabled = true;
     
-    // Enviar dados para o webhook n8n
     const response = await fetch('https://automatiz-n8n-webhook.dp51xv.easypanel.host/webhook/a5af5896-4ac6-43ce-b1e2-7ffa8a43b55b', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(webhookData)
     });
     
     if (response.ok) {
-      // Restaurar botão antes de fechar modal
       submitButton.textContent = originalText;
       submitButton.disabled = false;
-      
-      // Fechar modal
       closeModal();
-      
-      // Mostrar mensagem de sucesso
       alert('Cadastro enviado com sucesso! Entraremos em contato em breve.');
-      
-      // Limpar formulário
       event.target.reset();
     } else {
       throw new Error(`Erro HTTP: ${response.status}`);
@@ -166,8 +160,6 @@ async function submitForm(event) {
   } catch (error) {
     console.error('Erro ao enviar cadastro:', error);
     alert('Erro ao enviar cadastro. Tente novamente ou entre em contato conosco.');
-    
-    // Restaurar botão em caso de erro
     if (submitButton) {
       submitButton.textContent = originalText;
       submitButton.disabled = false;
@@ -181,11 +173,9 @@ async function submitCoordenadorForm(event) {
   const formData = new FormData(event.target);
   const data = Object.fromEntries(formData);
   
-  // Obter referência do botão e texto original antes do try
   const submitButton = event.target.querySelector('button[type="submit"]');
   const originalText = submitButton.textContent;
   
-  // Preparar dados para o webhook
   const webhookData = {
     body: {
       data: {
@@ -203,31 +193,20 @@ async function submitCoordenadorForm(event) {
   };
   
   try {
-    // Mostrar indicador de carregamento
     submitButton.textContent = 'Enviando...';
     submitButton.disabled = true;
     
-    // Enviar dados para o webhook n8n
     const response = await fetch('https://automatiz-n8n-webhook.dp51xv.easypanel.host/webhook/a5af5896-4ac6-43ce-b1e2-7ffa8a43b55b', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(webhookData)
     });
     
     if (response.ok) {
-      // Restaurar botão antes de fechar modal
       submitButton.textContent = originalText;
       submitButton.disabled = false;
-      
-      // Fechar modal
       closeCoordenadorModal();
-      
-      // Mostrar mensagem de sucesso
       alert('Cadastro enviado com sucesso! Entraremos em contato em breve.');
-      
-      // Limpar formulário
       event.target.reset();
     } else {
       throw new Error(`Erro HTTP: ${response.status}`);
@@ -236,11 +215,176 @@ async function submitCoordenadorForm(event) {
   } catch (error) {
     console.error('Erro ao enviar cadastro:', error);
     alert('Erro ao enviar cadastro. Tente novamente ou entre em contato conosco.');
-    
-    // Restaurar botão em caso de erro
     if (submitButton) {
       submitButton.textContent = originalText;
       submitButton.disabled = false;
     }
   }
 }
+
+
+// ===================================================================
+// == INÍCIO DO CÓDIGO DO CARROSSEL DE FOTOS (VERSÃO JSON) ===========
+// ===================================================================
+async function initCarousel() {
+  const track = document.querySelector('.carousel-track');
+  const prevButton = document.querySelector('.carousel-button.prev');
+  const nextButton = document.querySelector('.carousel-button.next');
+  const container = document.querySelector('.carousel-container');
+
+  let carouselData = [];
+
+  try {
+    const response = await fetch('carousel-data.json');
+    if (!response.ok) {
+        throw new Error(`Erro ao buscar o arquivo: ${response.statusText}`);
+    }
+    carouselData = await response.json();
+  } catch (error) {
+    console.error("Falha ao carregar dados do carrossel:", error);
+    const carouselSection = document.getElementById('historias-de-sucesso');
+    if(carouselSection) carouselSection.style.display = 'none'; 
+    return;
+  }
+  
+  const originalSlidesCount = carouselData.length;
+  if (originalSlidesCount === 0) {
+    const carouselSection = document.getElementById('historias-de-sucesso');
+    if(carouselSection) carouselSection.style.display = 'none';
+    return;
+  }
+  
+  // Popula o carrossel
+  track.innerHTML = carouselData.map(item => `
+    <div class="carousel-slide">
+      <img src="${item.imgSrc}" alt="${item.caption}">
+      <p class="carousel-caption">${item.caption}</p>
+    </div>
+  `).join('');
+
+  // --- NOVA LÓGICA DE LOOP BIDIRECIONAL ---
+  
+  const slides = Array.from(track.children);
+  const slidesPerView = 3; // Ajuste se mudar no CSS (Desktop)
+  
+  // Apenas clona se houver mais slides do que o visível
+  if (originalSlidesCount > slidesPerView) {
+      // 1. Clona os últimos slides e os coloca no início
+      const clonesEnd = slides.slice(-slidesPerView).map(slide => slide.cloneNode(true));
+      clonesEnd.forEach(clone => track.insertBefore(clone, slides[0]));
+      
+      // 2. Clona os primeiros slides e os coloca no final
+      const clonesStart = slides.slice(0, slidesPerView).map(slide => slide.cloneNode(true));
+      clonesStart.forEach(clone => track.appendChild(clone));
+  }
+  
+  let currentIndex = slidesPerView; // Começa no primeiro slide *original*
+  let isTransitioning = false;
+
+  // Função para mover o carrossel para a posição correta
+  function setPosition(animate = true) {
+      if (!animate) {
+          track.style.transition = 'none'; // Desliga a animação para o "salto"
+      }
+      
+      const slideWidth = track.children[0].getBoundingClientRect().width;
+      track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+
+      if (!animate) {
+          // Força o navegador a aplicar a mudança antes de reativar a transição
+          // requestAnimationFrame é mais moderno que setTimeout para isso
+          requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                  track.style.transition = 'transform 0.5s ease-in-out';
+              });
+          });
+      }
+  }
+
+  // Pula para a posição inicial sem que o usuário veja
+  setPosition(false);
+
+  // O "coração" do loop: ouve o fim da animação
+  track.addEventListener('transitionend', () => {
+      isTransitioning = false;
+      
+      // Se chegamos aos clones do final...
+      if (currentIndex >= originalSlidesCount + slidesPerView) {
+          currentIndex = slidesPerView; // ...volta para o primeiro slide original
+          setPosition(false); // ...sem animação
+      }
+      
+      // Se chegamos aos clones do início...
+      if (currentIndex < slidesPerView) {
+          currentIndex = originalSlidesCount + slidesPerView - 1; // ...pula para o último slide original correspondente
+          setPosition(false); // ...sem animação
+      }
+  });
+
+  function moveNext() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      currentIndex++;
+      setPosition();
+  }
+  
+  function movePrev() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+      currentIndex--;
+      setPosition();
+  }
+  
+  // --- FIM DA LÓGICA DE LOOP ---
+
+  nextButton.addEventListener('click', moveNext);
+  prevButton.addEventListener('click', movePrev);
+  
+  let autoPlayInterval;
+  function startAutoPlay() {
+    // Apenas inicia o autoplay se houver slides para rolar
+    if(originalSlidesCount > slidesPerView){
+      clearInterval(autoPlayInterval);
+      autoPlayInterval = setInterval(moveNext, 5000); 
+    }
+  }
+
+  function stopAutoPlay() {
+    clearInterval(autoPlayInterval);
+  }
+
+  container.addEventListener('mouseenter', stopAutoPlay);
+  container.addEventListener('mouseleave', startAutoPlay);
+  
+  function checkButtonsVisibility() {
+      if (originalSlidesCount <= slidesPerView) {
+          prevButton.style.display = 'none';
+          nextButton.style.display = 'none';
+          stopAutoPlay();
+      } else {
+          prevButton.style.display = 'flex';
+          nextButton.style.display = 'flex';
+          startAutoPlay();
+      }
+  }
+  
+  window.addEventListener('resize', () => {
+    setPosition(false);
+    checkButtonsVisibility();
+  });
+
+  checkButtonsVisibility();
+
+  // (Opcional: A lógica de 'fit-contain' pode ser adicionada aqui se você a estiver usando)
+  track.querySelectorAll('img').forEach(img => {
+      img.onload = () => {
+          const aspectRatio = img.naturalWidth / img.naturalHeight;
+          if (aspectRatio > 2.0 || aspectRatio < 0.7) {
+              img.classList.add('fit-contain');
+          }
+      };
+  });
+}
+// ===================================================================
+// == FIM DO CÓDIGO DO CARROSSEL DE FOTOS (VERSÃO JSON) =============
+// ===================================================================

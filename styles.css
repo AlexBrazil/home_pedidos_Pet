@@ -235,9 +235,87 @@ footer {
   background: #e55555;
 }
 
+/* --- Estilos do Carrossel --- */
+.carousel-section {
+  padding: 2rem 1rem;
+  background-color: var(--gray); /* Mantém a consistência visual */
+}
+
+.carousel-container {
+  position: relative;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden; /* Essencial para o efeito do carrossel */
+  border-radius: var(--radius);
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out; /* Animação suave da transição */
+}
+
+.carousel-slide {
+  width: 33.33%; /* Mantém como fallback */
+  flex-shrink: 0; /* Impede que os slides encolham */
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 250px; /* Altura fixa para consistência */
+  object-fit: contain; /* Garante que a imagem cubra o espaço sem distorcer */
+  background-color: #f0f0f0;
+  border-radius: var(--radius);
+  display: block;
+}
+
+.carousel-caption {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 0.75rem;
+  padding: 0 10px;
+}
+
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  color: var(--dark);
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-button:hover {
+  background-color: var(--light);
+}
+
+.carousel-button.prev {
+  left: 10px;
+}
+
+.carousel-button.next {
+  right: 10px;
+}
+
 /* Responsividade para telas menores */
 @media (max-width: 768px) {
   /* Ajustes para mobile */
+  .carousel-slide {
+    width: 50%; /* 2 slides */
+  }
   .hero {
     padding: 2rem 0.5rem;
   }
@@ -288,10 +366,17 @@ footer {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
+  .carousel-slide {
+    flex-basis: 50%; /* 2 slides em tablets */
+    min-width: 50%;
+  }
 }
 
 /* Para telas muito pequenas */
 @media (max-width: 480px) {
+  .carousel-slide {
+    width: 100%; /* 1 slide */
+  }
   .hero h1 {
     font-size: 1.5rem;
   }
@@ -313,5 +398,23 @@ footer {
   .form-group input,
   .form-group select {
     padding: 0.6rem;
+  }
+  
+  .carousel-container {
+    width: 100%;
+  }
+
+  .carousel-slide {
+    flex-basis: 100%; /* 1 slide em smartphones */
+    min-width: 100%;
+  }
+
+  .carousel-slide img {
+    height: 220px; /* Ajusta a altura da imagem para telas menores */
+  }
+
+  .carousel-button {
+    padding: 0.3rem 0.8rem;
+    font-size: 1.2rem;
   }
 }
