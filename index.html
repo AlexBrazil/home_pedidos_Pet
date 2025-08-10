@@ -9,7 +9,16 @@
 <body>
   <header>
     <div class="logo">Pedidos PET</div>
-    <nav>
+    
+    <!-- Botão do Menu Hambúrguer (só será visível no mobile) -->
+    <button id="hamburger-btn" class="hamburger" aria-label="Abrir menu" aria-expanded="false">
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+      <span class="hamburger-line"></span>
+    </button>
+
+    <!-- O menu de navegação agora tem um ID -->
+    <nav id="nav-menu">
       <a href="#como-funciona">Como Funciona</a>
       <a href="#participar">Participe</a>
       <a href="#" id="transparenciaBtn">Transparência</a>
@@ -28,7 +37,7 @@
       <h2 style="color: #FF6600;">
         ...sem perder seu precioso tempo ligando para vários fornecedores.
       </h2>
-      <h2>Nós fazemos isso para você. Veja como:</h2>
+      <h2 id="como-funciona">Nós fazemos isso para você. Veja como:</h2>
       <br>
       <img src="image/storyboard.png" alt="Como ajudar?" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
       <br>
@@ -54,7 +63,7 @@
   </section>
 
   <!-- Como Funciona -->
-  <section id="como-funciona">
+  <section>
     <h2 style="text-align:center; margin-bottom:2rem;">Faça parte do Projeto</h2>
     <div class="features">
       <div class="feature">

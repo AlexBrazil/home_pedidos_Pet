@@ -64,23 +64,54 @@ function trocarImagensResponsivas() {
 
 // Inicializar quando a página carregar
 document.addEventListener('DOMContentLoaded', function() {
+  // --- LÓGICA DO MENU HAMBÚRGUER ---
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const navMenu = document.getElementById('nav-menu');
+  const navLinks = navMenu.querySelectorAll('a');
+
+  // Abre e fecha o menu ao clicar no botão hambúrguer
+  hamburgerBtn.addEventListener('click', function() {
+    hamburgerBtn.classList.toggle('is-active');
+    navMenu.classList.toggle('is-active');
+
+    // Atualiza o atributo ARIA para acessibilidade
+    const isActive = hamburgerBtn.classList.contains('is-active');
+    hamburgerBtn.setAttribute('aria-expanded', isActive);
+  });
+  
+  // Fecha o menu automaticamente ao clicar em um dos links
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (navMenu.classList.contains('is-active')) {
+        hamburgerBtn.classList.remove('is-active');
+        navMenu.classList.remove('is-active');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+  // --- FIM DA LÓGICA DO MENU HAMBÚRGUER ---
+
+
+  // --- INICIALIZAÇÃO DAS OUTRAS FUNCIONALIDADES ---
+  
+  // Popula os formulários com os estados
   popularEstados('estado');
   popularEstados('estadoCoordenador');
   
-  // Trocar imagens baseado no tamanho da tela
+  // Troca as imagens de banner e storyboard para mobile, se necessário
   trocarImagensResponsivas();
   
-  // <<< INSERÇÃO INÍCIO: Adiciona o listener para o botão de transparência >>>
+  // Adiciona o listener para o botão de transparência
   const transparenciaBtn = document.getElementById('transparenciaBtn');
   if (transparenciaBtn) {
     transparenciaBtn.addEventListener('click', function(event) {
-      event.preventDefault(); // Impede que o link '#' recarregue a página
+      // Impede que o link '#' pule para o topo da página
+      event.preventDefault(); 
       openTransparenciaModal();
     });
   }
-  // <<< INSERÇÃO FIM >>>
 
-  // Inicializa o carrossel apenas se o elemento existir na página
+  // Inicializa o carrossel de fotos, se ele existir na página
   if (document.querySelector('.carousel-container')) {
     initCarousel();
   }
