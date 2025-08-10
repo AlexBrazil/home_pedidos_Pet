@@ -12,6 +12,7 @@
     <nav>
       <a href="#como-funciona">Como Funciona</a>
       <a href="#participar">Participe</a>
+      <a href="#" id="transparenciaBtn">Transparência</a>
       <a href="#contato">Contato</a>
     </nav>
   </header>
@@ -148,6 +149,19 @@
         </div>
         <button type="submit" class="btn btn-secondary">Enviar Cadastro</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal de Transparência de doações -->
+  <div id="transparenciaModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeTransparenciaModal()">&times;</span>
+      <h2 id="titulo-transparencia">Transparência do Projeto</h2>
+      <p>Abaixo estão as doações e contrapartidas recebidas recentemente. Agradecemos a todos os nossos parceiros e doadores!</p>
+      <div id="tabela-container">
+        <!-- A tabela será inserida aqui pelo JavaScript -->
+        <p>Carregando dados...</p>
+      </div>
     </div>
   </div>
 

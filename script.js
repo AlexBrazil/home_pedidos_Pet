@@ -70,12 +70,20 @@ document.addEventListener('DOMContentLoaded', function() {
   // Trocar imagens baseado no tamanho da tela
   trocarImagensResponsivas();
   
-  // INÍCIO DA INSERÇÃO: Chamar a inicialização do carrossel
+  // <<< INSERÇÃO INÍCIO: Adiciona o listener para o botão de transparência >>>
+  const transparenciaBtn = document.getElementById('transparenciaBtn');
+  if (transparenciaBtn) {
+    transparenciaBtn.addEventListener('click', function(event) {
+      event.preventDefault(); // Impede que o link '#' recarregue a página
+      openTransparenciaModal();
+    });
+  }
+  // <<< INSERÇÃO FIM >>>
+
   // Inicializa o carrossel apenas se o elemento existir na página
   if (document.querySelector('.carousel-container')) {
     initCarousel();
   }
-  // FIM DA INSERÇÃO
 });
 
 // Escutar mudanças no tamanho da tela
@@ -99,17 +107,32 @@ function closeCoordenadorModal() {
   document.getElementById('coordenadorModal').style.display = 'none';
 }
 
+// <<< INSERÇÃO INÍCIO: Funções para o novo Modal de Transparência >>>
+function openTransparenciaModal() {
+  document.getElementById('transparenciaModal').style.display = 'block';
+  carregarDadosTransparencia(); // Chama a função para carregar os dados
+}
+
+function closeTransparenciaModal() {
+  document.getElementById('transparenciaModal').style.display = 'none';
+}
+// <<< INSERÇÃO FIM >>>
+
 // Fechar modals clicando fora delas
 window.onclick = function(event) {
   const fornecedorModal = document.getElementById('fornecedorModal');
   const coordenadorModal = document.getElementById('coordenadorModal');
-  
+  const transparenciaModal = document.getElementById('transparenciaModal'); // <<< INSERÇÃO
+
   if (event.target == fornecedorModal) {
     fornecedorModal.style.display = 'none';
   }
   if (event.target == coordenadorModal) {
     coordenadorModal.style.display = 'none';
   }
+  if (event.target == transparenciaModal) { // <<< INSERÇÃO
+    transparenciaModal.style.display = 'none'; // <<< INSERÇÃO
+  } // <<< INSERÇÃO
 }
 
 async function submitForm(event) {
@@ -222,6 +245,57 @@ async function submitCoordenadorForm(event) {
   }
 }
 
+// <<< INSERÇÃO INÍCIO: Função para carregar e exibir os dados de transparência >>>
+async function carregarDadosTransparencia() {
+  const container = document.getElementById('tabela-container');
+  const tituloModal = document.getElementById('titulo-transparencia');
+  
+  // Reseta o conteúdo e o título para o estado de carregamento
+  container.innerHTML = '<p>Carregando dados...</p>';
+  tituloModal.textContent = 'Transparência do Projeto';
+
+  try {
+    const response = await fetch('transparencia-data.json');
+    if (!response.ok) {
+      throw new Error(`Erro na rede: ${response.statusText}`);
+    }
+    const data = await response.json(); // Agora 'data' é o objeto completo
+
+    const mesReferencia = data.mes_referencia;
+    const doacoes = data.doacoes; // 'doacoes' é o array
+
+    // Atualiza o título da modal se o mês de referência existir
+    if (mesReferencia) {
+      tituloModal.textContent = `Transparência - ${mesReferencia}`;
+    }
+
+    if (!doacoes || doacoes.length === 0) {
+      container.innerHTML = '<p>Nenhuma doação registrada para este período.</p>';
+      return;
+    }
+
+    // Constrói a tabela HTML como uma string
+    let tabelaHTML = '<table class="tabela-transparencia"><thead><tr><th>Doador</th><th>Doação</th></tr></thead><tbody>';
+
+    doacoes.forEach(item => {
+      // Sanitização simples para evitar problemas de HTML
+      const doadorSeguro = item.doador.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const doacaoSegura = item.doacao.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      tabelaHTML += `<tr><td>${doadorSeguro}</td><td>${doacaoSegura}</td></tr>`;
+    });
+
+    tabelaHTML += '</tbody></table>';
+
+    // Insere a tabela completa no container
+    container.innerHTML = tabelaHTML;
+
+  } catch (error) {
+    console.error('Falha ao carregar dados de transparência:', error);
+    container.innerHTML = '<p style="color: red;">Não foi possível carregar os dados. Tente novamente mais tarde.</p>';
+  }
+}
+// <<< INSERÇÃO FIM >>>
+
 
 // ===================================================================
 // == INÍCIO DO CÓDIGO DO CARROSSEL DE FOTOS (VERSÃO JSON) ===========
@@ -292,7 +366,6 @@ async function initCarousel() {
 
       if (!animate) {
           // Força o navegador a aplicar a mudança antes de reativar a transição
-          // requestAnimationFrame é mais moderno que setTimeout para isso
           requestAnimationFrame(() => {
               requestAnimationFrame(() => {
                   track.style.transition = 'transform 0.5s ease-in-out';
